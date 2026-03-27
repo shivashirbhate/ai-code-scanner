@@ -1,0 +1,24 @@
+services:
+  node:
+    dns:
+      - 8.8.8.8
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app:cached
+      - node_modules:/app/node_modules
+      - /mnt/d/My Ventures:/external
+    ports:
+      - "3000:3000"
+    # Added --host 0.0.0.0 and --disable-host-check
+    command: >
+      sh -c "
+        npm install && tail -f /dev/null
+      "
+
+volumes:
+  node_modules:
+
+networks:
+  default:
+    driver: bridge
