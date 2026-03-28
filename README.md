@@ -1,93 +1,220 @@
-# Productivity Flow (Beta)
+# AI Code Scanner (VS Code Extension)
 
-**Productivity Flow** is an advanced, privacy-first task management dashboard built with **Angular**. It goes beyond simple to-do lists by integrating energy management, focus timers, and habit-building streaks directly into your workflow.
+A lightweight AI-powered code scanner built as a VS Code extension using Node.js and optional local LLMs (e.g., Qwen2.5-Coder).
 
-## 🚀 Key Features
+---
 
-### 🧠 Smart Task Management
-*   **Three-Tier Prioritization:** Organize tasks into **Super Important**, **Important**, and **Less Important**.
-*   **Energy-Based Planning:** Tag tasks by Energy Level (**High**, **Medium**, **Low**) to match your mental capacity.
-*   **Rich Metadata:** Track Projects, Tags, Start Dates, Deadlines, and Recurrence (Daily/Weekly/Monthly).
-*   **Structured Subtasks:** Break down tasks into checklists with individual completion states and notes.
+CORE FEATURES
 
-### ⏱️ Focus & Time Tracking
-*   **Integrated Timer:** Start/Stop timers for any task. Tracks `totalTimeElapsed` and `timerSessionCount`.
-*   **Session Persistence:** Timer state is saved to `localStorage`, so you don't lose your active session if the tab closes.
-*   **Streak Counter:** Gamified tracking of consecutive days with completed tasks.
+1. Code Understanding
 
-### 🔔 Intelligent Notifications
-*   **Proactive Alerts:** Browser notifications trigger **15 minutes before** a scheduled task and **at the start time**.
-*   **Audio Cues:** Sound effects for timer start and task reminders.
-*   **Dashboard Alerts:** Visual indicators for "Ending Today" and "Overdue" tasks.
+* Explain code (functions, classes, files)
+* Identify modules and dependencies
+* Trace execution flow
+* Detect entry points
 
-### 📊 Dashboard & Views
-*   **Multiple Views:** Switch between **Board** (Kanban-style), **List**, **History**, and **Completed** views.
-*   **Dynamic Filtering:** Filter by Date (**Today**, **This Week**, **This Month**) and Search text.
-*   **Drag-and-Drop:** Reorder tasks or change priorities instantly.
+2. Static Analysis (Rule-Based)
 
-## 🛠️ Technical Architecture
+* Lint issues (custom or ESLint-based)
+* Code smells:
 
-### Core Stack
-*   **Framework:** Angular (utilizing **Signals** for reactive state management).
-*   **Language:** TypeScript.
-*   **Storage:** `localStorage` (Client-side only).
+  * Long functions
+  * Duplicate code
+  * Dead code
+* Complexity analysis:
 
-### State Management
-The application uses **Angular Signals** (`signal`, `computed`, `effect`) for a highly reactive and performant user experience.
-*   **Source of Truth:** `TaskService` maintains the `tasksSignal`.
-*   **Persistence:** `effect()` hooks automatically sync state changes to `localStorage`.
+  * Cyclomatic complexity
+  * Deep nesting
 
-### Data Migration
-Includes a robust migration layer to handle data schema evolution:
-*   Automatically converts legacy string-based subtasks to structured `Subtask` objects.
-*   Maps legacy `location` fields to the new `tags` array.
+3. Security Scanner
 
-## 🔒 Privacy
-Your data never leaves your browser. All tasks, timers, and settings are stored locally in your browser's `localStorage`.
+* Detect SQL injection patterns
+* Identify hardcoded secrets (API keys, tokens)
+* Flag unsafe APIs
+* Detect basic XSS/injection issues
 
+4. Upgrade Suggestions
 
-## Update Angular Commands
+* Detect deprecated packages
+* Suggest version upgrades
+* Highlight breaking changes (basic level)
 
-| Update Target | Command to Run |
-| :--- | :--- |
-| Code Changes | Just Save File (Auto-sync) |
-| New NPM Package | `docker compose exec node npm install <name>` |
-| Angular Framework | `docker compose exec node npx ng update` |
-| Docker/Node Config | `docker compose up --build` |
-| Force Fresh Reinstall | `docker compose down -v` then `docker compose up` |
+5. AI Suggestions (LLM-Based)
 
-| Step | Command |
-| :--- | :--- |
-| Commit Work | `git commit -m "save"` |
-| Check Versions | `docker compose exec node npx ng version` |
-| Update CLI/Core | `docker compose exec node npx ng update @angular/core @angular/cli` |
-| Reset Container | `docker compose down -v && docker compose up --build` |
+* Refactor code
+* Improve performance
+* Improve readability
+* Suggest better coding patterns
 
-## Deployment (GitHub Pages)
+---
 
-| Step | Command |
-| :--- | :--- |
-| 1. Install Deployer | `docker compose exec --user root node npx ng add angular-cli-ghpages` |
-| 2. Install Git | `docker compose exec node apk add git` |
-| 3. Configure Git | `docker compose exec node git config --global user.email "you@example.com"`<br>`docker compose exec node git config --global user.name "Your Name"` |
-| 4. Deploy (Use PAT) | `docker compose exec node npx ng deploy --base-href=/productivity-helper/ --repo=https://<TOKEN>@github.com/<USERNAME>/<REPO>.git` |
-| Manual Alternative | `npx angular-cli-ghpages --dir=dist/productivity-helper --repo=https://<TOKEN>@github.com/<USERNAME>/<REPO>.git` |
+INSTALLATION & SETUP STEPS
 
+Step 1: Install Prerequisites
 
-## Create GitHub Token (PAT)
+* Node.js (v18+)
+* Visual Studio Code
+* npm (comes with Node.js)
+* Optional: Ollama (for local LLM)
 
-1. Go to **Settings** > **Developer settings** > **Personal access tokens** > **Tokens (classic)**.
-2. Click **Generate new token (classic)**.
-3. Select the `repo` scope (required for pushing to the repository).
-4. Click **Generate token** and copy the string (starts with `ghp_`).
+---
 
+Step 2: Create VS Code Extension
 
+```bash
+npm install -g yo generator-code
+yo code
+```
 
-Credits:
-Sound Effect by <a href="https://pixabay.com/users/make_more_sound-35032787/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=145477">Jesse Grum</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=145477">Pixabay</a>
+Select:
 
-Sound Effect by <a href="https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=423717">Jurij</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=423717">Pixabay</a>
+* TypeScript
+* VS Code Extension
 
-Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=43875">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=43875">Pixabay</a>
+---
 
-Sound Effect by <a href="https://pixabay.com/users/universfield-28281460/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=487897">Universfield</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=487897">Pixabay</a>
+Step 3: Install Dependencies
+
+```bash
+npm install
+```
+
+Optional:
+
+```bash
+npm install eslint axios
+```
+
+---
+
+Step 4: Project Structure
+
+```plaintext
+src/
+  extension.ts
+  scanner/
+    codeAnalyzer.ts
+    lintScanner.ts
+    securityScanner.ts
+    complexityAnalyzer.ts
+  ai/
+    llmClient.ts
+    promptBuilder.ts
+  utils/
+    fileReader.ts
+    parser.ts
+```
+
+---
+
+Step 5: Add Command
+
+In package.json:
+
+```json
+"contributes": {
+  "commands": [
+    {
+      "command": "aiScanner.scan",
+      "title": "Run AI Code Scanner"
+    }
+  ]
+}
+```
+
+---
+
+Step 6: Register Command
+
+In extension.ts:
+
+```ts
+import * as vscode from 'vscode';
+
+export function activate(context: vscode.ExtensionContext) {
+  const disposable = vscode.commands.registerCommand('aiScanner.scan', async () => {
+    vscode.window.showInformationMessage('Running AI Code Scanner...');
+    // call scanner logic here
+  });
+
+  context.subscriptions.push(disposable);
+}
+```
+
+---
+
+Step 7: Run Extension
+
+```bash
+npm run compile
+```
+
+Then press:
+
+```plaintext
+F5
+```
+
+---
+
+Step 8: Setup LLM (Optional)
+
+```bash
+ollama run qwen2.5-coder
+```
+
+API endpoint:
+
+```plaintext
+http://localhost:11434/api/generate
+```
+
+---
+
+Step 9: Run Scanner
+
+* Open any file in VS Code
+* Press:
+
+```plaintext
+Ctrl + Shift + P
+```
+
+* Run:
+
+```plaintext
+Run AI Code Scanner
+```
+
+---
+
+Step 10: Package Extension
+
+```bash
+npm install -g vsce
+vsce package
+```
+
+---
+
+Step 11: Install Extension
+
+```bash
+code --install-extension your-extension.vsix
+```
+
+---
+
+FINAL RESULT
+
+* VS Code extension ready
+* Rule-based scanning working
+* AI suggestions (if LLM connected)
+
+---
+
+If you want next step, I can give you:
+
+* MVP working scanner code (very fast start)
+* Best prompt design for LLM (this is critical)
+* How to avoid heavy parsing tools and still get good results
