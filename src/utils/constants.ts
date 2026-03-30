@@ -11,3 +11,7 @@ export const IGNORE_FOLDERS = [
   'build',
   '.angular'
 ];
+
+export const LLM_URL = 'http://ollama:11434/api/generate';
+
+export const LLM_MODEL = 'gemma3:12b'; // || 'qwen2.5-coder';

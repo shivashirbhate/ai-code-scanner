@@ -9,7 +9,7 @@ import { generateHash } from './utils/hash';
 import { scanDirectory } from './scanner/fileScanner';
 import { StaticAnalyzer } from './scanner/staticAnalyzer';
 import { SecurityScanner } from './scanner/securityScanner';
-import { SUPPORTED_EXTENSIONS, MAX_FILE_SIZE } from './utils/constants';
+import { SUPPORTED_EXTENSIONS, MAX_FILE_SIZE, LLM_URL, LLM_MODEL } from './utils/constants';
 
 function printHelp() {
   console.log(`
@@ -47,12 +47,12 @@ async function run(): Promise<void> {
   if (arg1 === 'settings') {
     console.log(`
 ⚙️  Current Settings:
-  - LLM Endpoint: http://localhost:11434/api/generate
-  - LLM Model: qwen2.5-coder
+  - LLM Endpoint: ${LLM_URL}
+  - LLM Model: ${LLM_MODEL}
   - Output Directory: output/
   - Supported Extensions: ${SUPPORTED_EXTENSIONS.join(', ')}
   - Max File Size: ${MAX_FILE_SIZE / 1024}KB
-`);
+  `);
     process.exit(0);
   }
 
