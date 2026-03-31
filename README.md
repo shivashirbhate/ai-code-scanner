@@ -111,6 +111,43 @@ graph TD
     D --> E
     E --> F[Developer Action]
 ```
+-----
+
+## 🔮 Future Scope: Documentation Generation
+
+Based on the generated tree files (`folder-structure.md` and `project-logical-tree.json`), here are the types of comprehensive documentation that can be created:
+
+### 1. Technical Architecture & System Design
+Document the "Big Picture" of how the application functions with clear directory structure insights.
+* **Component Hierarchy:** 
+* **Service Layer Pattern:** 
+* **Data Flow Diagrams:** 
+
+### 2. API & Service Documentation
+Create a "Developer Guide" foundation using the specialized services identified in the tree structure.
+* **Task Management API:** 
+* **AI Integration Guide:** 
+* **Analytics Engine:** 
+
+### 3. User Manual & Functional Guides
+Write end-user documentation based on the file descriptions and component analysis.
+* **Getting Started:** How to use.
+* **Advanced Analytics:** How to interpret.
+* **Using AI Features:** A guide on how to use features.
+
+### 4. Maintenance & Onboarding Docs
+Create resources for new developers joining the project using the folder structure insights.
+* **Folder Structure Guide:** 
+* **State Management:** 
+
+### Summary of Documentation
+
+| Sr. No. | Doc Type |
+| :--- | :--- |
+| 1. | **Logic & Data** |
+| 2. | **AI Features** |
+| 3. | **User Interface** |
+| 4. | **Data Visualization** |
 
 -----
 
