@@ -9,6 +9,7 @@ import { generateHash } from './utils/hash';
 import { scanDirectory } from './scanner/fileScanner';
 import { StaticAnalyzer } from './scanner/staticAnalyzer';
 import { SecurityScanner } from './scanner/securityScanner';
+import { generateDocs } from './utils/docGenerator';
 import { SUPPORTED_EXTENSIONS, MAX_FILE_SIZE, LLM_URL, LLM_MODEL } from './utils/constants';
 
 function printHelp() {
@@ -24,6 +25,8 @@ Actions:
   analyze           Analyze a file for code smells (Static Analysis)
   security-scan     Scan a file for SQLi, XSS, and hardcoded secrets
   validate-report   Scan directory, validate for smells, and generate a report
+  generate-doc      Generate folder structure and logical tree from scan-result.json
+  generate-docs     Generate folder structure and logical tree from scan-result.json
   
 Commands:
   help              Show this help message
@@ -70,7 +73,7 @@ async function run(): Promise<void> {
 
   // 2. Read file content
   let code: string = '';
-  if (!['scan-and-chunk', 'chunk-all', 'validate-report'].includes(action.toLowerCase())) {
+  if (!['scan-and-chunk', 'chunk-all', 'validate-report', 'generate-doc', 'generate-docs'].includes(action.toLowerCase())) {
     try {
       code = fs.readFileSync(absolutePath, 'utf-8');
     } catch (error) {
@@ -257,6 +260,20 @@ async function run(): Promise<void> {
       fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
       console.log(`\n✅ Validation complete. Found ${report.totalSmells} code smells & ${report.totalVulnerabilities} security vulnerabilities.`);
       console.log(`📄 Report saved to: output/validation-report.json\n`);
+      break;
+    }
+
+    case 'generate-doc':
+    case 'generate-docs': {
+      console.log(`\n📄 Generating documentation from ${path.basename(absolutePath)}...`);
+      try {
+        generateDocs(absolutePath);
+        console.log('✅ Documentation generated successfully.');
+        console.log('📄 Files created: output/folder-structure.md, output/project-logical-tree.json\n');
+      } catch (error: any) {
+        console.error('Error generating docs:', error.message);
+        process.exit(1);
+      }
       break;
     }
 

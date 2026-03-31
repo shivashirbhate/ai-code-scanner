@@ -1,220 +1,136 @@
-# AI Code Scanner (VS Code Extension)
 
-A lightweight AI-powered code scanner built as a VS Code extension using Node.js and optional local LLMs (e.g., Qwen2.5-Coder).
+<div align="center">
 
----
+# 🛡️ AI Code Scanner
 
-CORE FEATURES
+### *Privacy-First, Local-LLM Powered Code Intelligence for VS Code*
 
-1. Code Understanding
+[](https://www.google.com/search?q=https://marketplace.visualstudio.com/)
+[](https://www.google.com/search?q=https://nodejs.org/)
+[](https://www.google.com/search?q=https://opensource.org/licenses/MIT)
+[](https://www.google.com/search?q=https://ollama.com/)
 
-* Explain code (functions, classes, files)
-* Identify modules and dependencies
-* Trace execution flow
-* Detect entry points
+**Stop sending your proprietary code to the cloud.** AI Code Scanner combines deterministic AST-based analysis with local LLM orchestration to give you professional-grade insights right on your machine.
 
-2. Static Analysis (Rule-Based)
+[Explore Features](https://www.google.com/search?q=%23-core-capabilities) • [Installation](https://www.google.com/search?q=%23-quick-start) • [Architecture](https://www.google.com/search?q=%23-under-the-hood)
 
-* Lint issues (custom or ESLint-based)
-* Code smells:
 
-  * Long functions
-  * Duplicate code
-  * Dead code
-* Complexity analysis:
+</div>
 
-  * Cyclomatic complexity
-  * Deep nesting
+## 🚀 Overview
 
-3. Security Scanner
+**AI Code Scanner** is a lightweight VS Code extension designed for developers who demand high-performance static analysis without sacrificing privacy. By utilizing **Node.js** and local models like **Qwen2.5-Coder** via **Ollama**, this tool identifies security vulnerabilities, calculates complexity, and suggests refactors—all without an internet connection.
 
-* Detect SQL injection patterns
-* Identify hardcoded secrets (API keys, tokens)
-* Flag unsafe APIs
-* Detect basic XSS/injection issues
+-----
 
-4. Upgrade Suggestions
+## 🛠️ Core Capabilities
 
-* Detect deprecated packages
-* Suggest version upgrades
-* Highlight breaking changes (basic level)
+### 1\. 🔍 Code Understanding & Logic
 
-5. AI Suggestions (LLM-Based)
+  * **Contextual Explanations:** Get deep dives into complex functions and class hierarchies.
+  * **Dependency Tracing:** Map out module imports and execution flows instantly.
+  * **Entry Point Detection:** Quickly identify where the logic begins in unfamiliar codebases.
 
-* Refactor code
-* Improve performance
-* Improve readability
-* Suggest better coding patterns
+### 2\. 🛡️ Security & Guardrails
 
----
+  * **Secret Detection:** High-entropy regex scanning for hardcoded API keys and tokens.
+  * **Injection Prevention:** Real-time flagging of unsafe SQL and XSS patterns.
+  * **Safe API Audits:** Detect deprecated or high-risk Node.js/Web API usage.
 
-INSTALLATION & SETUP STEPS
+### 3\. 📊 Static Analysis (AST-Powered)
 
-Step 1: Install Prerequisites
+  * **Complexity Metrics:** Real-time calculation of **Cyclomatic Complexity ($M = E - N + 2P$)**.
+  * **Code Smells:** Identify dead code, deep nesting, and "God Functions" before they hit production.
+  * **Upgrade Intel:** Detect deprecated npm packages and breaking changes.
 
-* Node.js (v18+)
-* Visual Studio Code
-* npm (comes with Node.js)
-* Optional: Ollama (for local LLM)
+### 4\. 🧠 Local AI Suggestions
 
----
+  * **Privacy-First Refactoring:** Local LLMs suggest performance improvements and readability wins.
+  * **Pattern Recognition:** Suggestions for better design patterns (Singleton, Factory, etc.) tailored to your stack.
 
-Step 2: Create VS Code Extension
+-----
 
-```bash
-npm install -g yo generator-code
-yo code
-```
+## 📦 Quick Start
 
-Select:
+### Prerequisites
 
-* TypeScript
-* VS Code Extension
+  * **VS Code** v1.80+
+  * **Node.js** v18 or higher
+  * **Ollama** (Recommended for Local LLM features)
 
----
+### Installation
 
-Step 3: Install Dependencies
+1.  **Clone & Install:**
+    ```bash
+    git clone https://github.com/your-repo/ai-code-scanner.git
+    cd ai-code-scanner
+    npm install
+    ```
+2.  **Compile:**
+    ```bash
+    npm run compile
+    ```
+3.  **Launch:** Press `F5` to open a new VS Code window with the extension enabled.
 
-```bash
-npm install
-```
+-----
 
-Optional:
+## ⚙️ Configuration
 
-```bash
-npm install eslint axios
-```
-
----
-
-Step 4: Project Structure
-
-```plaintext
-src/
-  extension.ts
-  scanner/
-    codeAnalyzer.ts
-    lintScanner.ts
-    securityScanner.ts
-    complexityAnalyzer.ts
-  ai/
-    llmClient.ts
-    promptBuilder.ts
-  utils/
-    fileReader.ts
-    parser.ts
-```
-
----
-
-Step 5: Add Command
-
-In package.json:
-
-```json
-"contributes": {
-  "commands": [
-    {
-      "command": "aiScanner.scan",
-      "title": "Run AI Code Scanner"
-    }
-  ]
-}
-```
-
----
-
-Step 6: Register Command
-
-In extension.ts:
-
-```ts
-import * as vscode from 'vscode';
-
-export function activate(context: vscode.ExtensionContext) {
-  const disposable = vscode.commands.registerCommand('aiScanner.scan', async () => {
-    vscode.window.showInformationMessage('Running AI Code Scanner...');
-    // call scanner logic here
-  });
-
-  context.subscriptions.push(disposable);
-}
-```
-
----
-
-Step 7: Run Extension
-
-```bash
-npm run compile
-```
-
-Then press:
-
-```plaintext
-F5
-```
-
----
-
-Step 8: Setup LLM (Optional)
+To enable the AI-powered suggestions, ensure **Ollama** is running locally:
 
 ```bash
 ollama run qwen2.5-coder
 ```
 
-API endpoint:
+In your VS Code `settings.json`, you can point to your local endpoint:
 
-```plaintext
-http://localhost:11434/api/generate
+```json
+{
+  "aiScanner.llmEndpoint": "http://localhost:11434/api/generate",
+  "aiScanner.model": "qwen2.5-coder"
+}
 ```
 
----
+-----
 
-Step 9: Run Scanner
+## 🏗️ Under The Hood
 
-* Open any file in VS Code
-* Press:
+AI Code Scanner uses a **Hybrid Analysis Pipeline**:
 
-```plaintext
-Ctrl + Shift + P
+1.  **Level 1: Regex & AST (Instant):** Fast, rule-based scanning for linting and simple security issues.
+2.  **Level 2: Semantic Analysis (Local AI):** When high-level reasoning is needed (e.g., "Refactor this logic"), the scanner sends a structured prompt to your local model.
+
+<!-- end list -->
+
+```mermaid
+graph TD
+    A[Source Code] --> B{Analyzer}
+    B -->|Deterministic| C[AST Parser]
+    B -->|Heuristic| D[Local LLM]
+    C --> E[Diagnostics Tab]
+    D --> E
+    E --> F[Developer Action]
 ```
 
-* Run:
+-----
 
-```plaintext
-Run AI Code Scanner
-```
+## 🤝 Contributing
 
----
+We love contributors\! If you want to add a scanner rule or improve the LLM prompt templates:
 
-Step 10: Package Extension
+1.  Fork the Project.
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the Branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
-```bash
-npm install -g vsce
-vsce package
-```
 
----
+<div align="center">
 
-Step 11: Install Extension
+Built with ❤️ for the Developer Community.
 
-```bash
-code --install-extension your-extension.vsix
-```
+[Back to top](https://www.google.com/search?q=%23-ai-code-scanner)
 
----
+</div>
 
-FINAL RESULT
-
-* VS Code extension ready
-* Rule-based scanning working
-* AI suggestions (if LLM connected)
-
----
-
-If you want next step, I can give you:
-
-* MVP working scanner code (very fast start)
-* Best prompt design for LLM (this is critical)
-* How to avoid heavy parsing tools and still get good results
+-----
