@@ -17,7 +17,88 @@
 
 </div>
 
-## 🚀 Overview
+## � VS Code Extension Conversion Guide
+
+This project was converted from a CLI tool to a VS Code extension. Here's the complete transformation:
+
+### Key Changes Made
+
+#### 1. **Package.json Transformation**
+- Converted from Node.js CLI to VS Code extension manifest
+- Added extension metadata, activation events, and commands
+- Configured context menus and keybindings
+- Added VS Code-specific dependencies and scripts
+
+#### 2. **Build System Overhaul**
+- **Webpack Configuration**: Created `webpack.config.js` for bundling
+- **TypeScript Config**: Updated `tsconfig.json` for extension development
+- **Build Scripts**: Added compile, watch, package, and publish commands
+
+#### 3. **Extension Architecture**
+- **Entry Point**: `src/extension.ts` (replaces CLI `index.ts`)
+- **Commands**: 4 main commands with VS Code integration
+- **Output Channel**: Dedicated output panel for results
+- **Context Menus**: Right-click integration for files
+
+#### 4. **Development Setup**
+- **VS Code Config**: `.vscode/` directory with launch and tasks
+- **ESLint**: Code quality enforcement
+- **Testing**: Basic test framework setup
+- **Packaging**: VSCE integration for marketplace publishing
+
+### Files Created/Modified
+
+#### New Files:
+```
+webpack.config.js          # Webpack bundler config
+.vscode/launch.json         # Debug configuration
+.vscode/tasks.json          # Build tasks
+.eslintrc.json             # Linting rules
+.vscodeignore              # Packaging exclusions
+test/index.ts              # Test runner
+test/runTest.ts            # Test suite
+CHANGELOG.md               # Version history
+```
+
+#### Modified Files:
+```
+package.json                 # Extension manifest
+tsconfig.json              # TypeScript for extensions
+src/extension.ts           # Main extension logic
+README.md                  # Extension documentation
+.gitignore                 # VS Code specific ignores
+```
+
+### Installation & Development
+
+#### For Users:
+```bash
+# Install from marketplace or VSIX
+code --install-extension ai-code-scanner-0.0.1.vsix
+```
+
+#### For Developers:
+```bash
+npm install
+npm run watch      # Development mode
+npm run compile    # Production build
+npm run package    # Create .vsix file
+npm run publish    # Publish to marketplace
+```
+
+### Extension Features
+
+| Feature | CLI Version | Extension Version |
+|---------|-------------|-------------------|
+| Code Analysis | ✅ | ✅ Enhanced UI |
+| AI Explanations | ✅ | ✅ Integrated |
+| Security Scan | ✅ | ✅ Context menu |
+| Documentation Gen | ✅ | ✅ File explorer |
+| Output Display | Console | VS Code Panel |
+
+---
+
+## �🚀 Overview
 
 **AI Code Scanner** is a lightweight VS Code extension designed for developers who demand high-performance static analysis without sacrificing privacy. By utilizing **Node.js** and local models like **Qwen2.5-Coder** via **Ollama**, this tool identifies security vulnerabilities, calculates complexity, and suggests refactors—all without an internet connection.
 
@@ -50,46 +131,129 @@
 
 -----
 
-## 📦 Quick Start
+## 📦 Installation
 
-### Prerequisites
+### Option 1: Install from VS Code Marketplace (Recommended)
+1. Open VS Code
+2. Go to Extensions (Ctrl+Shift+X)
+3. Search for "AI Code Scanner"
+4. Click Install
 
-  * **VS Code** v1.80+
-  * **Node.js** v18 or higher
-  * **Ollama** (Recommended for Local LLM features)
+### Option 2: Install from VSIX (Development)
+1. Download the `.vsix` file from releases
+2. In VS Code: Extensions → Install from VSIX...
+3. Select the downloaded `.vsix` file
 
-### Installation
+### Option 3: Development Installation
+```bash
+git clone https://github.com/your-repo/ai-code-scanner.git
+cd ai-code-scanner
+npm install
+npm run compile
+```
 
-1.  **Clone & Install:**
-    ```bash
-    git clone https://github.com/your-repo/ai-code-scanner.git
-    cd ai-code-scanner
-    npm install
-    ```
-2.  **Compile:**
-    ```bash
-    npm run compile
-    ```
-3.  **Launch:** Press `F5` to open a new VS Code window with the extension enabled.
+Then in VS Code:
+- Press `F5` to launch extension development host
+- Or use `Ctrl+Shift+P` → "Debug: Start Debugging"
 
 -----
 
 ## ⚙️ Configuration
 
-To enable the AI-powered suggestions, ensure **Ollama** is running locally:
-
-```bash
-ollama run qwen2.5-coder
-```
-
-In your VS Code `settings.json`, you can point to your local endpoint:
+Configure the extension in VS Code settings:
 
 ```json
 {
   "aiScanner.llmEndpoint": "http://localhost:11434/api/generate",
-  "aiScanner.model": "qwen2.5-coder"
+  "aiScanner.model": "qwen2.5-coder",
+  "aiScanner.maxFileSize": 1048576
 }
 ```
+
+**Required Setup:** Ensure Ollama is running locally:
+```bash
+ollama run qwen2.5-coder
+```
+
+-----
+
+## 🚀 Usage
+
+### Available Commands
+
+| Command | Description | Context Menu |
+|---------|-------------|--------------|
+| `AI Code Scanner: Scan Current File` | Full analysis with AI insights | Right-click on file |
+| `AI Code Scanner: Analyze for Code Smells` | Static analysis only | Right-click on file |
+| `AI Code Scanner: Security Scan` | Security vulnerability check | Right-click on file |
+| `AI Code Scanner: Generate Documentation` | Create project docs from scan results | Right-click on `scan-result.json` |
+
+### How to Use
+
+1. **Open any code file** in VS Code
+2. **Right-click** in the editor → Select desired scan command
+3. **View results** in the "AI Code Scanner" output panel
+4. **For documentation**: Right-click on `scan-result.json` → "Generate Documentation"
+
+### Output Panel
+
+Results appear in VS Code's output panel with:
+- 📁 File information and dependencies
+- 🔧 Code smell analysis
+- 🛡️ Security vulnerability reports
+- 🤖 AI-powered explanations (when LLM is available)
+
+-----
+
+## 🛠️ Development
+
+### Building the Extension
+
+```bash
+# Install dependencies
+npm install
+
+# Development build with watch mode
+npm run watch
+
+# Production build
+npm run compile
+
+# Package extension
+npm run package
+
+# Publish to marketplace
+npm run publish
+```
+
+### Project Structure
+
+```
+src/
+├── extension.ts          # Main extension entry point
+├── ai/                   # LLM and prompt building
+├── scanner/              # Analysis engines
+├── chunker/              # Code chunking utilities
+├── types/                # TypeScript definitions
+└── utils/                # Helper functions
+```
+
+### Testing
+
+```bash
+# Run extension tests
+npm test
+
+# Debug tests
+npm run test-debug
+```
+
+### Publishing
+
+1. Update version in `package.json`
+2. Build and test thoroughly
+3. Create GitHub release
+4. Run `npm run publish` (requires VSCE authentication)
 
 -----
 
