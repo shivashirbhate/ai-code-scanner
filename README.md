@@ -205,6 +205,177 @@ Results appear in VS Code's output panel with:
 
 -----
 
+## ⚙️ How to Use Settings
+
+The extension supports two LLM providers: **Ollama (Local)** and **ChatGPT (API)**. Configure your preferred provider using the guided setup or manual settings.
+
+### Quick Setup (Recommended)
+
+1. **Open Command Palette** (`Ctrl+Shift+P`)
+2. **Run**: `AI Code Scanner: Configure LLM Provider`
+3. **Choose Provider**: Select Ollama or ChatGPT
+4. **Follow Prompts**: Enter required information
+
+### Manual Configuration
+
+Access settings via `File → Preferences → Settings` (or `Ctrl+,`), search for "AI Code Scanner":
+
+#### For Ollama (Local AI)
+```json
+{
+  "aiScanner.provider": "ollama",
+  "aiScanner.ollama.url": "http://localhost:11434",
+  "aiScanner.ollama.model": "qwen2.5-coder",
+  "aiScanner.ollama.timeout": 30000
+}
+```
+
+#### For ChatGPT (Cloud AI)
+```json
+{
+  "aiScanner.provider": "chatgpt",
+  "aiScanner.chatgpt.apiKey": "sk-your-api-key-here",
+  "aiScanner.chatgpt.model": "gpt-4-turbo"
+}
+```
+
+### Provider-Specific Settings
+
+| Setting | Ollama | ChatGPT | Description |
+|---------|--------|---------|-------------|
+| `aiScanner.provider` | ✅ | ✅ | Active provider selection |
+| `aiScanner.ollama.url` | ✅ | ❌ | Local server endpoint |
+| `aiScanner.ollama.model` | ✅ | ❌ | Model name (auto-detected) |
+| `aiScanner.ollama.timeout` | ✅ | ❌ | Request timeout (ms) |
+| `aiScanner.chatgpt.apiKey` | ❌ | ✅ | OpenAI API key |
+| `aiScanner.chatgpt.model` | ❌ | ✅ | GPT model selection |
+| `aiScanner.maxFileSize` | ✅ | ✅ | Max file size to analyze |
+
+### Testing Your Configuration
+
+- **Ollama**: Use `AI Code Scanner: Test Ollama Connection` command
+- **ChatGPT**: Configuration is validated during setup
+
+### Troubleshooting
+
+**Ollama Issues:**
+- Ensure Ollama is running: `ollama serve`
+- Check URL accessibility: `curl http://localhost:11434/api/tags`
+- Verify model availability: `ollama list`
+
+**ChatGPT Issues:**
+- Confirm API key validity at [platform.openai.com](https://platform.openai.com/api-keys)
+- Check account credits and rate limits
+
+-----
+
+## 🚀 How to Use This Extension
+
+### Getting Started
+
+1. **Install Prerequisites**
+   ```bash
+   # For Ollama users
+   curl -fsSL https://ollama.ai/install.sh | sh
+   ollama run qwen2.5-coder
+
+   # For ChatGPT users - get API key from OpenAI
+   ```
+
+2. **Configure Provider** (see Settings section above)
+
+3. **Start Scanning** your code!
+
+### Available Commands
+
+| Command | Shortcut | Description | When to Use |
+|---------|----------|-------------|-------------|
+| `AI Code Scanner: Scan Current File` | - | Full analysis with AI insights | Complete code review |
+| `AI Code Scanner: Analyze for Code Smells` | - | Static analysis only | Quick quality check |
+| `AI Code Scanner: Security Scan` | - | Security vulnerability check | Security audit |
+| `AI Code Scanner: Generate Documentation` | - | Create project docs from scan results | Documentation creation |
+| `AI Code Scanner: Configure LLM Provider` | - | Setup AI provider | Initial configuration |
+| `AI Code Scanner: Test Ollama Connection` | - | Verify Ollama setup | Troubleshooting |
+
+### Step-by-Step Usage
+
+#### Method 1: Context Menu (Easiest)
+1. **Open a code file** in VS Code editor
+2. **Right-click** anywhere in the code
+3. **Select** desired command from "AI Code Scanner" menu
+4. **View results** in the output panel
+
+#### Method 2: Command Palette
+1. **Press** `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac)
+2. **Type** "AI Code Scanner" and select command
+3. **Follow prompts** if any
+
+#### Method 3: File Explorer
+1. **Right-click** on `scan-result.json` in explorer
+2. **Select** "Generate Documentation"
+3. **Choose** output format (folder structure or logical tree)
+
+### Understanding Output
+
+Results appear in the **"AI Code Scanner" output panel**:
+
+```
+🔍 Starting AI Code Analysis for: example.js
+============================================================
+📁 File: /path/to/example.js
+🎯 Entry Point: Yes
+📦 Dependencies: axios, lodash
+
+🔧 Static Analysis (Code Smells):
+✅ No code smells detected.
+
+🛡️ Security Scanner:
+✅ No security vulnerabilities detected.
+
+🤖 Running Explain Code via Local LLM...
+💡 This function implements a user authentication flow...
+```
+
+### Output Sections Explained
+
+- **📁 File Info**: Basic file metadata and dependencies
+- **🔧 Code Smells**: Static analysis results (complexity, patterns)
+- **🛡️ Security**: Vulnerability scanning results
+- **🤖 AI Analysis**: LLM-powered explanations and suggestions
+
+### Advanced Usage
+
+#### Batch Processing
+- Use file explorer context menu on multiple files
+- Results are shown per file in sequence
+
+#### Documentation Generation
+- Run scan on entire project first
+- Use `scan-result.json` to generate comprehensive docs
+- Output includes folder structure and logical component tree
+
+#### Integration with Workflows
+- Add to VS Code tasks for automated scanning
+- Use in CI/CD pipelines with the CLI version
+- Combine with other extensions for enhanced analysis
+
+### Best Practices
+
+1. **Start Small**: Test on individual files before project-wide scans
+2. **Configure First**: Set up your LLM provider before heavy usage
+3. **Review Results**: Don't blindly accept AI suggestions
+4. **Regular Scanning**: Include in code review process
+5. **Update Models**: Keep Ollama models current for best results
+
+### Performance Tips
+
+- **File Size Limit**: Large files may timeout - adjust `maxFileSize` if needed
+- **Ollama Timeout**: Increase timeout for slower models or complex analysis
+- **Local Models**: Use efficient models like `qwen2.5-coder` for speed
+- **Caching**: Results are cached per session for faster re-analysis
+
+-----
+
 ## 🛠️ Development
 
 ### Building the Extension
