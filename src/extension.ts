@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import axios from 'axios';
 import { CodeAnalyzer } from './scanner/codeAnalyzer';
 import { PromptBuilder } from './ai/promptBuilder';
 import { LLMClient } from './ai/llmClient';
 import { StaticAnalyzer } from './scanner/staticAnalyzer';
 import { SecurityScanner } from './scanner/securityScanner';
 import { generateDocs } from './utils/docGenerator';
+import { configureLLMProvider } from './ai/llmSettings';
 
 let outputChannel: vscode.OutputChannel;
 
@@ -210,7 +212,83 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(scanCommand, analyzeCommand, securityScanCommand, generateDocsCommand);
+  // Configure LLM Provider command
+  const configureLLMCommand = vscode.commands.registerCommand('aiScanner.configureLLM', async () => {
+    outputChannel.show();
+    outputChannel.appendLine('🔧 Opening LLM Provider Configuration...');
+    await configureLLMProvider();
+  });
+
+  // Test Ollama Connection command
+  const testOllamaCommand = vscode.commands.registerCommand('aiScanner.testOllamaConnection', async () => {
+    const config = vscode.workspace.getConfiguration('aiScanner');
+    const ollamaUrl = config.get('ollama.url', 'http://localhost:11434');
+
+    outputChannel.show();
+    outputChannel.appendLine(`🧪 Testing Ollama connection to ${ollamaUrl}...`);
+
+    await vscode.window.withProgress({
+      location: vscode.ProgressLocation.Notification,
+      title: 'Testing Ollama connection...',
+      cancellable: false
+    }, async () => {
+      try {
+        const endpoints = ['api/models', 'models', 'api/tags'];
+        let modelNames: string[] = [];
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await axios.get(`${ollamaUrl.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`, { timeout: 5000 });
+            const data = response.data;
+
+            if (Array.isArray(data)) {
+              modelNames = data.map((item: any) => (typeof item === 'string' ? item : item.name)).filter(Boolean);
+            } else if (data.models && Array.isArray(data.models)) {
+              modelNames = data.models.map((m: any) => m.name).filter(Boolean);
+            } else if (data.model && typeof data.model === 'string') {
+              modelNames = [data.model];
+            }
+
+            if (modelNames.length > 0) {
+              break;
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        if (modelNames.length > 0) {
+          outputChannel.appendLine('✅ Connection successful!');
+          outputChannel.appendLine(`📦 Available models: ${modelNames.join(', ')}`);
+
+          const selectModel = await vscode.window.showQuickPick(modelNames, {
+            placeHolder: 'Select a model to use'
+          });
+
+          if (selectModel) {
+            await config.update('ollama.model', selectModel, vscode.ConfigurationTarget.Global);
+            outputChannel.appendLine(`✅ Model set to: ${selectModel}`);
+            vscode.window.showInformationMessage(`✅ Model updated to ${selectModel}`);
+          }
+        } else {
+          vscode.window.showErrorMessage('❌ Invalid response from Ollama');
+        }
+      } catch (error: any) {
+        const message = `❌ Connection failed: ${error.message}`;
+        outputChannel.appendLine(message);
+        vscode.window.showErrorMessage(message);
+      }
+    });
+  });
+
+  context.subscriptions.push(
+    scanCommand,
+    analyzeCommand,
+    securityScanCommand,
+    generateDocsCommand,
+    configureLLMCommand,
+    testOllamaCommand
+  );
 }
 
 export function deactivate() {
