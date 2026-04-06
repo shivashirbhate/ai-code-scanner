@@ -1,508 +1,333 @@
-
 <div align="center">
 
 # 🛡️ AI Code Scanner
 
 ### *Privacy-First, Local-LLM Powered Code Intelligence for VS Code*
 
-[](https://www.google.com/search?q=https://marketplace.visualstudio.com/)
-[](https://www.google.com/search?q=https://nodejs.org/)
-[](https://www.google.com/search?q=https://opensource.org/licenses/MIT)
-[](https://www.google.com/search?q=https://ollama.com/)
-
 **Stop sending your proprietary code to the cloud.** AI Code Scanner combines deterministic AST-based analysis with local LLM orchestration to give you professional-grade insights right on your machine.
 
-[Explore Features](https://www.google.com/search?q=%23-core-capabilities) • [Installation](https://www.google.com/search?q=%23-quick-start) • [Architecture](https://www.google.com/search?q=%23-under-the-hood)
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue)](https://marketplace.visualstudio.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
+[![Ollama](https://img.shields.io/badge/Ollama-Supported-orange)](https://ollama.com/)
 
+[📖 For Users](#-for-users) • [🛠️ For Developers](#-for-developers) • [📚 Additional Information](#-additional-information) • [🏗️ Architecture](#-under-the-hood)
 
 </div>
 
-## � VS Code Extension Conversion Guide
-
-This project was converted from a CLI tool to a VS Code extension. Here's the complete transformation:
-
-### Key Changes Made
-
-#### 1. **Package.json Transformation**
-- Converted from Node.js CLI to VS Code extension manifest
-- Added extension metadata, activation events, and commands
-- Configured context menus and keybindings
-- Added VS Code-specific dependencies and scripts
-
-#### 2. **Build System Overhaul**
-- **Webpack Configuration**: Created `webpack.config.js` for bundling
-- **TypeScript Config**: Updated `tsconfig.json` for extension development
-- **Build Scripts**: Added compile, watch, package, and publish commands
-
-#### 3. **Extension Architecture**
-- **Entry Point**: `src/extension.ts` (replaces CLI `index.ts`)
-- **Commands**: 4 main commands with VS Code integration
-- **Output Channel**: Dedicated output panel for results
-- **Context Menus**: Right-click integration for files
-
-#### 4. **Development Setup**
-- **VS Code Config**: `.vscode/` directory with launch and tasks
-- **ESLint**: Code quality enforcement
-- **Testing**: Basic test framework setup
-- **Packaging**: VSCE integration for marketplace publishing
-
-### Files Created/Modified
-
-#### New Files:
-```
-webpack.config.js          # Webpack bundler config
-.vscode/launch.json         # Debug configuration
-.vscode/tasks.json          # Build tasks
-.eslintrc.json             # Linting rules
-.vscodeignore              # Packaging exclusions
-test/index.ts              # Test runner
-test/runTest.ts            # Test suite
-CHANGELOG.md               # Version history
-```
-
-#### Modified Files:
-```
-package.json                 # Extension manifest
-tsconfig.json              # TypeScript for extensions
-src/extension.ts           # Main extension logic
-README.md                  # Extension documentation
-.gitignore                 # VS Code specific ignores
-```
-
-### Installation & Development
-
-#### For Users:
-```bash
-# Install from marketplace or VSIX
-code --install-extension ai-code-scanner-0.0.1.vsix
-```
-
-#### For Developers:
-```bash
-npm install
-npm run watch      # Development mode
-npm run compile    # Production build
-npm run package    # Create .vsix file
-npm run publish    # Publish to marketplace
-```
-
-### Extension Features
-
-| Feature | CLI Version | Extension Version |
-|---------|-------------|-------------------|
-| Code Analysis | ✅ | ✅ Enhanced UI |
-| AI Explanations | ✅ | ✅ Integrated |
-| Security Scan | ✅ | ✅ Context menu |
-| Documentation Gen | ✅ | ✅ File explorer |
-| Output Display | Console | VS Code Panel |
-
 ---
 
-## �🚀 Overview
+## 📖 For Users
 
-**AI Code Scanner** is a lightweight VS Code extension designed for developers who demand high-performance static analysis without sacrificing privacy. By utilizing **Node.js** and local models like **Qwen2.5-Coder** via **Ollama**, this tool identifies security vulnerabilities, calculates complexity, and suggests refactors—all without an internet connection.
+*Quick start guide for end users who want to install and use the extension.*
 
------
+### 🚀 Quick Start
+1. [Install the Extension](#installation)
+2. [Configure Your LLM Provider](#configuration)
+3. [Start Scanning Code](#usage)
 
-## 🛠️ Core Capabilities
+### 📦 Installation
 
-### 1\. 🔍 Code Understanding & Logic
+#### Option 1: VS Code Marketplace (Recommended)
+1. Open VS Code (`Ctrl+Shift+X`)
+2. Search for "AI Code Scanner"
+3. Click **Install**
 
-  * **Contextual Explanations:** Get deep dives into complex functions and class hierarchies.
-  * **Dependency Tracing:** Map out module imports and execution flows instantly.
-  * **Entry Point Detection:** Quickly identify where the logic begins in unfamiliar codebases.
+#### Option 2: Manual Installation
+1. Download `.vsix` from [Releases](../../releases)
+2. `Ctrl+Shift+P` → "Extensions: Install from VSIX"
+3. Select downloaded file
 
-### 2\. 🛡️ Security & Guardrails
+### ⚙️ Configuration
 
-  * **Secret Detection:** High-entropy regex scanning for hardcoded API keys and tokens.
-  * **Injection Prevention:** Real-time flagging of unsafe SQL and XSS patterns.
-  * **Safe API Audits:** Detect deprecated or high-risk Node.js/Web API usage.
+#### Quick Setup (Recommended)
+1. `Ctrl+Shift+P` → "AI Code Scanner: Configure LLM Provider"
+2. Choose **Ollama** or **ChatGPT**
+3. Follow the prompts
 
-### 3\. 📊 Static Analysis (AST-Powered)
+#### Manual Settings
+Access via `File → Preferences → Settings` → Search "AI Code Scanner"
 
-  * **Complexity Metrics:** Real-time calculation of **Cyclomatic Complexity ($M = E - N + 2P$)**.
-  * **Code Smells:** Identify dead code, deep nesting, and "God Functions" before they hit production.
-  * **Upgrade Intel:** Detect deprecated npm packages and breaking changes.
-
-### 4\. 🧠 Local AI Suggestions
-
-  * **Privacy-First Refactoring:** Local LLMs suggest performance improvements and readability wins.
-  * **Pattern Recognition:** Suggestions for better design patterns (Singleton, Factory, etc.) tailored to your stack.
-
------
-
-## 📦 Installation
-
-### Option 1: Install from VS Code Marketplace (Recommended)
-1. Open VS Code
-2. Go to Extensions (Ctrl+Shift+X)
-3. Search for "AI Code Scanner"
-4. Click Install
-
-### Option 2: Install from VSIX (Development)
-1. Download the `.vsix` file from releases
-2. In VS Code: Extensions → Install from VSIX...
-3. Select the downloaded `.vsix` file
-
-### Option 3: Development Installation
-```bash
-git clone https://github.com/your-repo/ai-code-scanner.git
-cd ai-code-scanner
-npm install
-npm run compile
-```
-
-Then in VS Code:
-- Press `F5` to launch extension development host
-- Or use `Ctrl+Shift+P` → "Debug: Start Debugging"
-
------
-
-## ⚙️ Configuration
-
-Configure the extension in VS Code settings:
-
-```json
-{
-  "aiScanner.llmEndpoint": "http://localhost:11434/api/generate",
-  "aiScanner.model": "qwen2.5-coder",
-  "aiScanner.maxFileSize": 1048576
-}
-```
-
-**Required Setup:** Ensure Ollama is running locally:
-```bash
-ollama run qwen2.5-coder
-```
-
------
-
-## 🚀 Usage
-
-### Available Commands
-
-| Command | Description | Context Menu |
-|---------|-------------|--------------|
-| `AI Code Scanner: Scan Current File` | Full analysis with AI insights | Right-click on file |
-| `AI Code Scanner: Analyze for Code Smells` | Static analysis only | Right-click on file |
-| `AI Code Scanner: Security Scan` | Security vulnerability check | Right-click on file |
-| `AI Code Scanner: Generate Documentation` | Create project docs from scan results | Right-click on `scan-result.json` |
-
-### How to Use
-
-1. **Open any code file** in VS Code
-2. **Right-click** in the editor → Select desired scan command
-3. **View results** in the "AI Code Scanner" output panel
-4. **For documentation**: Right-click on `scan-result.json` → "Generate Documentation"
-
-### Output Panel
-
-Results appear in VS Code's output panel with:
-- 📁 File information and dependencies
-- 🔧 Code smell analysis
-- 🛡️ Security vulnerability reports
-- 🤖 AI-powered explanations (when LLM is available)
-
------
-
-## ⚙️ How to Use Settings
-
-The extension supports two LLM providers: **Ollama (Local)** and **ChatGPT (API)**. Configure your preferred provider using the guided setup or manual settings.
-
-### Quick Setup (Recommended)
-
-1. **Open Command Palette** (`Ctrl+Shift+P`)
-2. **Run**: `AI Code Scanner: Configure LLM Provider`
-3. **Choose Provider**: Select Ollama or ChatGPT
-4. **Follow Prompts**: Enter required information
-
-### Manual Configuration
-
-Access settings via `File → Preferences → Settings` (or `Ctrl+,`), search for "AI Code Scanner":
-
-#### For Ollama (Local AI)
+**For Ollama (Local AI):**
 ```json
 {
   "aiScanner.provider": "ollama",
   "aiScanner.ollama.url": "http://localhost:11434",
-  "aiScanner.ollama.model": "qwen2.5-coder",
-  "aiScanner.ollama.timeout": 30000
+  "aiScanner.ollama.model": "qwen2.5-coder"
 }
 ```
 
-#### For ChatGPT (Cloud AI)
+**For ChatGPT (Cloud AI):**
 ```json
 {
   "aiScanner.provider": "chatgpt",
-  "aiScanner.chatgpt.apiKey": "sk-your-api-key-here",
+  "aiScanner.chatgpt.apiKey": "sk-your-key-here",
   "aiScanner.chatgpt.model": "gpt-4-turbo"
 }
 ```
 
-### Provider-Specific Settings
+### 🚀 Usage
 
-| Setting | Ollama | ChatGPT | Description |
-|---------|--------|---------|-------------|
-| `aiScanner.provider` | ✅ | ✅ | Active provider selection |
-| `aiScanner.ollama.url` | ✅ | ❌ | Local server endpoint |
-| `aiScanner.ollama.model` | ✅ | ❌ | Model name (auto-detected) |
-| `aiScanner.ollama.timeout` | ✅ | ❌ | Request timeout (ms) |
-| `aiScanner.chatgpt.apiKey` | ❌ | ✅ | OpenAI API key |
-| `aiScanner.chatgpt.model` | ❌ | ✅ | GPT model selection |
-| `aiScanner.maxFileSize` | ✅ | ✅ | Max file size to analyze |
+#### Available Commands
+| Command | Description | Access |
+|---------|-------------|---------|
+| `AI Code Scanner: Scan Current File` | Full analysis with AI | Right-click file |
+| `AI Code Scanner: Analyze for Code Smells` | Static analysis only | Right-click file |
+| `AI Code Scanner: Security Scan` | Security check | Right-click file |
+| `AI Code Scanner: Generate Documentation` | Create docs from scan results | Right-click `scan-result.json` |
 
-### Testing Your Configuration
+#### How to Scan Code
+1. **Open a code file** in VS Code
+2. **Right-click** → Select scan command
+3. **View results** in "AI Code Scanner" output panel
 
-- **Ollama**: Use `AI Code Scanner: Test Ollama Connection` command
-- **ChatGPT**: Configuration is validated during setup
+#### Understanding Results
+- 📁 **File Info**: Dependencies and metadata
+- 🔧 **Code Smells**: Static analysis findings
+- 🛡️ **Security**: Vulnerability reports
+- 🤖 **AI Analysis**: LLM-powered insights
 
-### Troubleshooting
+### 🆘 Troubleshooting
 
 **Ollama Issues:**
 - Ensure Ollama is running: `ollama serve`
-- Check URL accessibility: `curl http://localhost:11434/api/tags`
-- Verify model availability: `ollama list`
+- Test connection: `AI Code Scanner: Test Ollama Connection`
 
 **ChatGPT Issues:**
-- Confirm API key validity at [platform.openai.com](https://platform.openai.com/api-keys)
-- Check account credits and rate limits
+- Verify API key at [platform.openai.com](https://platform.openai.com/api-keys)
+- Check account credits
 
------
+---
 
-## 🚀 How to Use This Extension
+## 🛠️ For Developers
 
-### Getting Started
+*Complete development guide for contributors and maintainers.*
 
-1. **Install Prerequisites**
-   ```bash
-   # For Ollama users
-   curl -fsSL https://ollama.ai/install.sh | sh
-   ollama run qwen2.5-coder
+### 🏗️ Development Setup
 
-   # For ChatGPT users - get API key from OpenAI
-   ```
+#### Prerequisites
+- Node.js 18+
+- VS Code
+- Ollama (for local AI testing)
 
-2. **Configure Provider** (see Settings section above)
-
-3. **Start Scanning** your code!
-
-### Available Commands
-
-| Command | Shortcut | Description | When to Use |
-|---------|----------|-------------|-------------|
-| `AI Code Scanner: Scan Current File` | - | Full analysis with AI insights | Complete code review |
-| `AI Code Scanner: Analyze for Code Smells` | - | Static analysis only | Quick quality check |
-| `AI Code Scanner: Security Scan` | - | Security vulnerability check | Security audit |
-| `AI Code Scanner: Generate Documentation` | - | Create project docs from scan results | Documentation creation |
-| `AI Code Scanner: Configure LLM Provider` | - | Setup AI provider | Initial configuration |
-| `AI Code Scanner: Test Ollama Connection` | - | Verify Ollama setup | Troubleshooting |
-
-### Step-by-Step Usage
-
-#### Method 1: Context Menu (Easiest)
-1. **Open a code file** in VS Code editor
-2. **Right-click** anywhere in the code
-3. **Select** desired command from "AI Code Scanner" menu
-4. **View results** in the output panel
-
-#### Method 2: Command Palette
-1. **Press** `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac)
-2. **Type** "AI Code Scanner" and select command
-3. **Follow prompts** if any
-
-#### Method 3: File Explorer
-1. **Right-click** on `scan-result.json` in explorer
-2. **Select** "Generate Documentation"
-3. **Choose** output format (folder structure or logical tree)
-
-### Understanding Output
-
-Results appear in the **"AI Code Scanner" output panel**:
-
-```
-🔍 Starting AI Code Analysis for: example.js
-============================================================
-📁 File: /path/to/example.js
-🎯 Entry Point: Yes
-📦 Dependencies: axios, lodash
-
-🔧 Static Analysis (Code Smells):
-✅ No code smells detected.
-
-🛡️ Security Scanner:
-✅ No security vulnerabilities detected.
-
-🤖 Running Explain Code via Local LLM...
-💡 This function implements a user authentication flow...
-```
-
-### Output Sections Explained
-
-- **📁 File Info**: Basic file metadata and dependencies
-- **🔧 Code Smells**: Static analysis results (complexity, patterns)
-- **🛡️ Security**: Vulnerability scanning results
-- **🤖 AI Analysis**: LLM-powered explanations and suggestions
-
-### Advanced Usage
-
-#### Batch Processing
-- Use file explorer context menu on multiple files
-- Results are shown per file in sequence
-
-#### Documentation Generation
-- Run scan on entire project first
-- Use `scan-result.json` to generate comprehensive docs
-- Output includes folder structure and logical component tree
-
-#### Integration with Workflows
-- Add to VS Code tasks for automated scanning
-- Use in CI/CD pipelines with the CLI version
-- Combine with other extensions for enhanced analysis
-
-### Best Practices
-
-1. **Start Small**: Test on individual files before project-wide scans
-2. **Configure First**: Set up your LLM provider before heavy usage
-3. **Review Results**: Don't blindly accept AI suggestions
-4. **Regular Scanning**: Include in code review process
-5. **Update Models**: Keep Ollama models current for best results
-
-### Performance Tips
-
-- **File Size Limit**: Large files may timeout - adjust `maxFileSize` if needed
-- **Ollama Timeout**: Increase timeout for slower models or complex analysis
-- **Local Models**: Use efficient models like `qwen2.5-coder` for speed
-- **Caching**: Results are cached per session for faster re-analysis
-
------
-
-## 🛠️ Development
-
-### Building the Extension
-
+#### Installation
 ```bash
-# Install dependencies
+git clone https://github.com/your-repo/ai-code-scanner.git
+cd ai-code-scanner
 npm install
+```
 
-# Development build with watch mode
+#### Development Workflow
+```bash
+# Start development mode
 npm run watch
 
-# Production build
+# Debug extension (F5 in VS Code)
+# Or: Ctrl+Shift+P → "Debug: Start Debugging"
+
+# Run tests
+npm test
+
+# Build for production
 npm run compile
 
 # Package extension
 npm run package
-
-# Publish to marketplace
-npm run publish
 ```
 
-### Project Structure
-
+### 📁 Project Structure
 ```
 src/
-├── extension.ts          # Main extension entry point
-├── ai/                   # LLM and prompt building
+├── extension.ts          # Main entry point
+├── ai/                   # LLM integration
+│   ├── llmClient.ts      # AI client wrapper
+│   ├── promptBuilder.ts  # Prompt templates
+│   └── llmSettings.ts    # Provider configuration
 ├── scanner/              # Analysis engines
+│   ├── codeAnalyzer.ts   # Dependency analysis
+│   ├── staticAnalyzer.ts # Code quality checks
+│   ├── securityScanner.ts# Security scanning
+│   └── fileScanner.ts    # File processing
 ├── chunker/              # Code chunking utilities
 ├── types/                # TypeScript definitions
 └── utils/                # Helper functions
+
+dist/                     # Compiled output
+test/                     # Test files
+.vscode/                  # VS Code configuration
 ```
 
-### Testing
+### 🔧 Build & Release
 
+#### Building
 ```bash
-# Run extension tests
-npm test
+npm run compile    # Production build
+npm run watch      # Development with watch
+npm run package    # Create .vsix package
+```
 
-# Debug tests
+#### Publishing
+```bash
+# Update version in package.json
+npm run publish    # Requires VSCE auth
+```
+
+### 🧪 Testing
+
+#### Unit Tests
+```bash
+npm test
+```
+
+#### Integration Tests
+```bash
 npm run test-debug
 ```
 
-### Publishing
+#### Manual Testing
+1. `F5` to launch extension host
+2. Test all commands in new window
+3. Verify output panel functionality
 
-1. Update version in `package.json`
-2. Build and test thoroughly
-3. Create GitHub release
-4. Run `npm run publish` (requires VSCE authentication)
+### 🤝 Contributing
 
------
+#### Development Process
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Make changes and test thoroughly
+4. Commit: `git commit -m 'Add amazing feature'`
+5. Push: `git push origin feature/amazing-feature`
+6. Open Pull Request
 
-## 🏗️ Under The Hood
+#### Code Standards
+- TypeScript strict mode
+- ESLint configuration
+- Comprehensive test coverage
+- Clear commit messages
+
+#### Adding New Features
+- Update `package.json` commands if needed
+- Add tests for new functionality
+- Update documentation
+- Follow existing code patterns
+
+---
+
+## 📚 Additional Information
+
+*Detailed documentation, architecture, and future plans.*
+
+### 🏗️ Under The Hood
 
 AI Code Scanner uses a **Hybrid Analysis Pipeline**:
 
-1.  **Level 1: Regex & AST (Instant):** Fast, rule-based scanning for linting and simple security issues.
-2.  **Level 2: Semantic Analysis (Local AI):** When high-level reasoning is needed (e.g., "Refactor this logic"), the scanner sends a structured prompt to your local model.
+1. **Level 1: Deterministic (Instant)**
+   - Regex pattern matching
+   - AST-based static analysis
+   - Rule-based security scanning
 
-<!-- end list -->
+2. **Level 2: Semantic (AI-Powered)**
+   - Local LLM for code understanding
+   - Contextual explanations
+   - Intelligent refactoring suggestions
 
 ```mermaid
 graph TD
     A[Source Code] --> B{Analyzer}
     B -->|Deterministic| C[AST Parser]
     B -->|Heuristic| D[Local LLM]
-    C --> E[Diagnostics Tab]
+    C --> E[Output Panel]
     D --> E
     E --> F[Developer Action]
 ```
------
 
-## 🔮 Future Scope: Documentation Generation
+### 🛠️ Core Capabilities
 
-Based on the generated tree files (`folder-structure.md` and `project-logical-tree.json`), here are the types of comprehensive documentation that can be created:
+#### 1. 🔍 Code Understanding
+- **Dependency Tracing**: Map imports and relationships
+- **Entry Point Detection**: Identify application entry points
+- **Function Analysis**: Understand complex logic flows
 
-### 1. Technical Architecture & System Design
-Document the "Big Picture" of how the application functions with clear directory structure insights.
-* **Component Hierarchy:** 
-* **Service Layer Pattern:** 
-* **Data Flow Diagrams:** 
+#### 2. 🛡️ Security & Safety
+- **Secret Detection**: High-entropy pattern scanning
+- **Injection Prevention**: SQL/XSS vulnerability detection
+- **API Safety**: Deprecated function warnings
 
-### 2. API & Service Documentation
-Create a "Developer Guide" foundation using the specialized services identified in the tree structure.
-* **Task Management API:** 
-* **AI Integration Guide:** 
-* **Analytics Engine:** 
+#### 3. 📊 Static Analysis
+- **Complexity Metrics**: Cyclomatic complexity calculation
+- **Code Smells**: Pattern-based quality analysis
+- **Performance Insights**: Bottleneck identification
 
-### 3. User Manual & Functional Guides
-Write end-user documentation based on the file descriptions and component analysis.
-* **Getting Started:** How to use.
-* **Advanced Analytics:** How to interpret.
-* **Using AI Features:** A guide on how to use features.
+#### 4. 🧠 AI-Powered Features
+- **Contextual Explanations**: Natural language code understanding
+- **Refactoring Suggestions**: AI-driven improvement recommendations
+- **Pattern Recognition**: Design pattern identification
 
-### 4. Maintenance & Onboarding Docs
-Create resources for new developers joining the project using the folder structure insights.
-* **Folder Structure Guide:** 
-* **State Management:** 
+### 🔮 Future Scope
 
-### Summary of Documentation
+#### Planned Features
+- **Multi-language Support**: Python, Java, C#, Go
+- **Custom Rules Engine**: User-defined analysis rules
+- **Team Collaboration**: Shared scan results and insights
+- **CI/CD Integration**: Automated scanning in pipelines
 
-| Sr. No. | Doc Type |
-| :--- | :--- |
-| 1. | **Logic & Data** |
-| 2. | **AI Features** |
-| 3. | **User Interface** |
-| 4. | **Data Visualization** |
+#### Documentation Generation
+Based on scan results, generate:
+- **Architecture Diagrams**: System component relationships
+- **API Documentation**: Service and function references
+- **User Guides**: Feature usage instructions
+- **Maintenance Docs**: Onboarding for new developers
 
------
+### 📋 API Reference
 
-## 🤝 Contributing
+#### Extension Commands
+```typescript
+// Main scanning commands
+vscode.commands.registerCommand('aiScanner.scan', scanCurrentFile)
+vscode.commands.registerCommand('aiScanner.analyze', analyzeCodeSmells)
+vscode.commands.registerCommand('aiScanner.securityScan', performSecurityScan)
 
-We love contributors\! If you want to add a scanner rule or improve the LLM prompt templates:
+// Configuration commands
+vscode.commands.registerCommand('aiScanner.configureLLM', configureProvider)
+vscode.commands.registerCommand('aiScanner.testOllamaConnection', testConnection)
 
-1.  Fork the Project.
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the Branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
+// Documentation commands
+vscode.commands.registerCommand('aiScanner.generateDocs', generateDocumentation)
+```
 
+#### Configuration Schema
+```json
+{
+  "aiScanner.provider": "ollama" | "chatgpt",
+  "aiScanner.ollama.url": "string",
+  "aiScanner.ollama.model": "string",
+  "aiScanner.ollama.timeout": "number",
+  "aiScanner.chatgpt.apiKey": "string",
+  "aiScanner.chatgpt.model": "string",
+  "aiScanner.maxFileSize": "number"
+}
+```
+
+### 🔗 Related Documentation
+
+- [VS Code Extension API](../../docs/vscode-api.md)
+- [LLM Integration Guide](../../docs/llm-integration.md)
+- [Contributing Guidelines](../../CONTRIBUTING.md)
+- [Changelog](../../CHANGELOG.md)
+- [Security Policy](../../SECURITY.md)
+
+### 📞 Support
+
+- **Issues**: [GitHub Issues](../../issues)
+- **Discussions**: [GitHub Discussions](../../discussions)
+- **Documentation**: [Wiki](../../wiki)
+
+---
 
 <div align="center">
 
-Built with ❤️ for the Developer Community.
+Built with ❤️ for the Developer Community
 
-[Back to top](https://www.google.com/search?q=%23-ai-code-scanner)
+[⬆️ Back to Top](#-ai-code-scanner) • [📖 For Users](#-for-users) • [🛠️ For Developers](#-for-developers) • [📚 Additional Information](#-additional-information)
 
 </div>
-
------
