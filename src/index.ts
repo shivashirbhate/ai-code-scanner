@@ -265,9 +265,37 @@ async function run(): Promise<void> {
 
     case 'generate-doc':
     case 'generate-docs': {
-      console.log(`\n📄 Generating documentation from ${path.basename(absolutePath)}...`);
+      const outputDir = path.resolve('output');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      let scanResultPath = absolutePath;
+      const isDirectory = fs.existsSync(absolutePath) && fs.statSync(absolutePath).isDirectory();
+
+      if (isDirectory) {
+        console.log(`\n📂 Scanning directory for documentation: ${absolutePath}...`);
+        const files = scanDirectory(absolutePath, absolutePath);
+        const scanResult = {
+          projectRoot: absolutePath,
+          totalFiles: files.length,
+          files
+        };
+
+        scanResultPath = path.join(outputDir, 'scan-result.json');
+        fs.writeFileSync(scanResultPath, JSON.stringify(scanResult, null, 2));
+        console.log(`✅ scan-result.json generated at ${scanResultPath}`);
+      } else if (path.extname(absolutePath).toLowerCase() !== '.json') {
+        console.error('Error: generate-docs requires either a directory path or a scan-result.json file path.');
+        process.exit(1);
+      } else if (!fs.existsSync(absolutePath)) {
+        console.error(`Error: File not found at ${absolutePath}`);
+        process.exit(1);
+      }
+
+      console.log(`\n📄 Generating documentation from ${path.basename(scanResultPath)}...`);
       try {
-        generateDocs(absolutePath);
+        generateDocs(scanResultPath);
         console.log('✅ Documentation generated successfully.');
         console.log('📄 Files created: output/folder-structure.md, output/project-logical-tree.json\n');
       } catch (error: any) {

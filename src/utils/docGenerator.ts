@@ -28,7 +28,7 @@ function buildFolderTree(files: any[]): any {
   const tree: any = {};
 
   for (const file of files) {
-    const parts = file.path.split('/');
+    const parts = file.path.split(/[\\\/]+/);
     let current = tree;
 
     for (const part of parts) {
@@ -75,7 +75,7 @@ function buildLogicalTree(scanData: any): any {
   let current = tree.structure;
 
   for (const file of scanData.files) {
-    const parts = file.path.split('/');
+    const parts = file.path.split(/[\\\/]+/);
     current = tree.structure; // Reset to root
 
     for (let i = 0; i < parts.length; i++) {
