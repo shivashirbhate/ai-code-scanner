@@ -10,6 +10,9 @@ module.exports = {
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },
   devtool: 'source-map',
+  stats: {
+    errorDetails: true
+  },
   externals: {
     vscode: 'commonjs vscode'
   },

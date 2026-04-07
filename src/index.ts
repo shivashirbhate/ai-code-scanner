@@ -16,19 +16,28 @@ function printHelp() {
   console.log(`
 Usage: ts-node src/index.ts <path> <action>
 
-Actions:
+📋 SCAN COMMANDS (Primary):
+  file-scan         Analyze a single file (smells + security) and generate report
+  project-scan      Scan entire project and generate comprehensive report
+
+🔧 AI ANALYSIS:
   explain           Explain the code in the specified file using LLM
   trace             Trace the execution flow of the code using LLM
+
+📦 CHUNKING:
   chunk             Chunk a single file and print to console
   chunk-all         Bulk chunk all files from a provided scan-result.json
   scan-and-chunk    Scan a directory and chunk all supported files
+
+📊 STATIC ANALYSIS:
   analyze           Analyze a file for code smells (Static Analysis)
   security-scan     Scan a file for SQLi, XSS, and hardcoded secrets
   validate-report   Scan directory, validate for smells, and generate a report
-  generate-doc      Generate folder structure and logical tree from scan-result.json
-  generate-docs     Generate folder structure and logical tree from scan-result.json
+
+📄 DOCUMENTATION:
+  generate-docs     Generate folder structure and logical tree (from dir or scan-result.json)
   
-Commands:
+💬 UTILITIES:
   help              Show this help message
   settings          Show current application settings
 `);
@@ -73,7 +82,8 @@ async function run(): Promise<void> {
 
   // 2. Read file content
   let code: string = '';
-  if (!['scan-and-chunk', 'chunk-all', 'validate-report', 'generate-doc', 'generate-docs'].includes(action.toLowerCase())) {
+  const directoryActions = ['scan-and-chunk', 'chunk-all', 'validate-report', 'project-scan', 'generate-doc', 'generate-docs'];
+  if (!directoryActions.includes(action.toLowerCase())) {
     try {
       code = fs.readFileSync(absolutePath, 'utf-8');
     } catch (error) {
@@ -189,6 +199,57 @@ async function run(): Promise<void> {
       break;
     }
 
+    case 'file-scan': {
+      console.log(`\n🔍 File Scan: ${path.basename(absolutePath)}...`);
+      const analyzer = new StaticAnalyzer();
+      const securityScanner = new SecurityScanner();
+      
+      const smells = analyzer.analyze(absolutePath, code);
+      const vulns = securityScanner.scan(absolutePath, code);
+
+      console.log(`\n📊 Code Smells: ${smells.length}`);
+      if (smells.length === 0) {
+        console.log('  ✅ No code smells detected.');
+      } else {
+        smells.forEach(smell => {
+          console.log(`  - [${smell.type}] Line ${smell.location.start.line + 1}: ${smell.message}`);
+        });
+      }
+
+      console.log(`\n🛡️  Security Vulnerabilities: ${vulns.length}`);
+      if (vulns.length === 0) {
+        console.log('  ✅ No security vulnerabilities detected.');
+      } else {
+        vulns.forEach(vuln => {
+          console.log(`  - [${vuln.severity}] [${vuln.type}] Line ${vuln.location.line + 1}: ${vuln.message}`);
+        });
+      }
+
+      // Save report
+      const outputDir = path.resolve('output');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+      
+      const report = {
+        timestamp: new Date().toISOString(),
+        filePath: absolutePath,
+        fileName: path.basename(absolutePath),
+        codeSmells: smells,
+        vulnerabilities: vulns,
+        summary: {
+          totalSmells: smells.length,
+          totalVulnerabilities: vulns.length,
+          overallScore: 100 - (smells.length * 5 + vulns.length * 10)
+        }
+      };
+      
+      const reportPath = path.join(outputDir, `file-scan-${Date.now()}.json`);
+      fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+      console.log(`\n📄 Report saved: ${reportPath}\n`);
+      break;
+    }
+
     case 'analyze': {
       console.log(`\n🔍 Analyzing for code smells in ${path.basename(absolutePath)}...`);
       const analyzer = new StaticAnalyzer();
@@ -223,6 +284,75 @@ async function run(): Promise<void> {
       break;
     }
 
+    case 'project-scan': {
+      console.log(`\n📂 Project Scan: ${absolutePath}...`);
+      const files = scanDirectory(absolutePath, absolutePath);
+      console.log(`✅ Scanned ${files.length} valid files.`);
+
+      const analyzer = new StaticAnalyzer();
+      const securityScanner = new SecurityScanner();
+      const report = {
+        timestamp: new Date().toISOString(),
+        projectRoot: absolutePath,
+        scannedFiles: files.length,
+        totalSmells: 0,
+        totalVulnerabilities: 0,
+        fileReports: [] as any[],
+        summary: {
+          totalSmells: 0,
+          totalVulnerabilities: 0,
+          filesWithIssues: 0,
+          overallScore: 100
+        }
+      };
+
+      for (const file of files) {
+        const smells = analyzer.analyze(file.path, file.content);
+        const vulns = securityScanner.scan(file.path, file.content);
+        
+        if (smells.length > 0 || vulns.length > 0) {
+          report.fileReports.push({
+            filePath: file.path,
+            smells: smells.length,
+            vulnerabilities: vulns.length,
+            details: { smells, vulns }
+          });
+          report.summary.filesWithIssues += 1;
+        }
+        
+        report.totalSmells += smells.length;
+        report.totalVulnerabilities += vulns.length;
+      }
+
+      report.summary.totalSmells = report.totalSmells;
+      report.summary.totalVulnerabilities = report.totalVulnerabilities;
+      report.summary.overallScore = Math.max(0, 100 - (report.totalSmells * 3 + report.totalVulnerabilities * 8));
+
+      const outputDir = path.resolve('output');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+      
+      // Generate scan-result.json for documentation generation
+      fs.writeFileSync(
+        path.join(outputDir, 'scan-result.json'),
+        JSON.stringify({ projectRoot: absolutePath, totalFiles: files.length, files }, null, 2)
+      );
+      
+      const reportPath = path.join(outputDir, `project-scan-${Date.now()}.json`);
+      fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+      
+      console.log(`\n📊 SUMMARY`);
+      console.log(`  Files Scanned: ${files.length}`);
+      console.log(`  Files with Issues: ${report.summary.filesWithIssues}`);
+      console.log(`  Total Code Smells: ${report.totalSmells}`);
+      console.log(`  Total Vulnerabilities: ${report.totalVulnerabilities}`);
+      console.log(`  Overall Score: ${report.summary.overallScore}/100`);
+      console.log(`\n📄 Report saved: ${reportPath}`);
+      console.log(`📄 Scan data saved: output/scan-result.json\n`);
+      break;
+    }
+
     case 'validate-report': {
       console.log(`\n📂 Scanning directory for validation: ${absolutePath}...`);
       const files = scanDirectory(absolutePath, absolutePath);
@@ -254,7 +384,7 @@ async function run(): Promise<void> {
 
       const outputDir = path.resolve('output');
       if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir);
+        fs.mkdirSync(outputDir, { recursive: true });
       }
       const reportPath = path.join(outputDir, 'validation-report.json');
       fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
